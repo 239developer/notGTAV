@@ -9,6 +9,7 @@ public class AxleInfo {
     public WheelCollider rightWheel;
     public bool motor;
     public bool steering;
+    public bool back;
 }
      
 public class SimpleCarController : MonoBehaviour {
@@ -60,27 +61,28 @@ public class SimpleCarController : MonoBehaviour {
 
     void ApplyForce()
     {
-        float brake = maxBrakeTorque * Input.GetAxis("Brake");
-        float motor = maxMotorTorque * Input.GetAxis("Motor");
-        float steering = maxSteeringAngle * Input.GetAxis("Steer");
+        float brake = maxBrakeTorque * Input.GetAxis("Jump");
+        float motor = maxMotorTorque * Input.GetAxis("Vertical");
+        float steering = maxSteeringAngle * Input.GetAxis("Horizontal");
      
         foreach (AxleInfo axleInfo in axleInfos) {
             if (axleInfo.steering) {
+                if(axleInfo.back)
+                    steering *= -1;
                 axleInfo.leftWheel.steerAngle = steering;
                 axleInfo.rightWheel.steerAngle = steering;
+                if(axleInfo.back)
+                    steering *= -1;
             }
             if (axleInfo.motor) {
                 axleInfo.leftWheel.motorTorque = motor;
                 axleInfo.rightWheel.motorTorque = motor;
-                axleInfo.leftWheel.brakeTorque = brake;
-                axleInfo.rightWheel.brakeTorque = brake;
             }
+            axleInfo.leftWheel.brakeTorque = brake;
+            axleInfo.rightWheel.brakeTorque = brake;
             ApplyLocalPositionToVisuals(axleInfo.leftWheel);
             ApplyLocalPositionToVisuals(axleInfo.rightWheel);
         }
-
-        if(steering == 0f)
-            rb.angularVelocity /= 2;
     }
 
     void Update()
