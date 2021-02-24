@@ -77,9 +77,9 @@ public class SimpleCarController : MonoBehaviour {
             if (axleInfo.motor) {
                 axleInfo.leftWheel.motorTorque = motor;
                 axleInfo.rightWheel.motorTorque = motor;
-            }
-            axleInfo.leftWheel.brakeTorque = brake;
-            axleInfo.rightWheel.brakeTorque = brake;
+                axleInfo.leftWheel.brakeTorque = brake;
+                axleInfo.rightWheel.brakeTorque = brake;
+            }            
             ApplyLocalPositionToVisuals(axleInfo.leftWheel);
             ApplyLocalPositionToVisuals(axleInfo.rightWheel);
         }
