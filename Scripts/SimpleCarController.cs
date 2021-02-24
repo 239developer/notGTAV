@@ -25,6 +25,8 @@ public class SimpleCarController : MonoBehaviour {
     private Quaternion startRotation;
     private Rigidbody rb;
 
+    public float k, sK;
+
     void Respawn()
     {
         transform.position = startPosition;
@@ -83,6 +85,12 @@ public class SimpleCarController : MonoBehaviour {
             ApplyLocalPositionToVisuals(axleInfo.leftWheel);
             ApplyLocalPositionToVisuals(axleInfo.rightWheel);
         }
+
+        if(steering == 0f)
+        {
+            rb.angularVelocity = Vector3.zero;
+            // rb.angularVelocity -= transform.TransformVector(0f, transform.InverseTransformVector(rb.angularVelocity).y, 0f) / sK * Time.fixedDeltaTime;
+        }
     }
 
     void Update()
@@ -98,5 +106,13 @@ public class SimpleCarController : MonoBehaviour {
     public void FixedUpdate()
     {
         ApplyForce();
+
+        var aV = transform.InverseTransformVector(rb.angularVelocity);
+        aV = transform.TransformVector(aV.x, 0f, 0f);
+
+        if(Input.GetKey(KeyCode.LeftShift))
+        {
+            rb.angularVelocity -= aV / k * Time.fixedDeltaTime;
+        }
     }
 }
